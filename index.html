@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IAcNewton - Física Newtoniana</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4285F4;
+            --secondary-color: #34A853;
+            --accent-color: #EA4335;
+            --dark-bg: #121212;
+            --darker-bg: #0D0D0D;
+            --chat-bg: #1E1E1E;
+            --message-user: #2D2D2D;
+            --message-bot: #333333;
+            --text-color: #E0E0E0;
+            --text-light: #FFFFFF;
+            --input-bg: #252525;
+            --border-color: #333;
+            --success-color: #34A853;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background-color: var(--darker-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-icon {
+            color: var(--primary-color);
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .new-chat-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .new-chat-btn:hover {
+            background-color: #3367D6;
+            transform: translateY(-2px);
+        }
+
+        .history-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .history-item {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-item:hover {
+            background-color: var(--message-user);
+        }
+
+        .history-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+        }
+
+        /* Chat */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--chat-bg);
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--darker-bg);
+        }
+
+        .chat-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .tools-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .tools-btn:hover {
+            background-color: var(--message-user);
+        }
+
+        .chat-container {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: linear-gradient(rgba(30, 30, 30, 0.9), rgba(30, 30, 30, 0.9)), 
+                        url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1471&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 15px 20px;
+            border-radius: 12px;
+            line-height: 1.6;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background-color: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: 0;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: var(--message-bot);
+            border-bottom-left-radius: 0;
+        }
+
+        .message-header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 15px 20px;
+            background-color: var(--message-bot);
+            border-radius: 12px;
+            align-self: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--text-color);
+            border-radius: 50%;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        /* Input */
+        .input-container {
+            padding: 15px;
+            background-color: var(--darker-bg);
+            border-top: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .input-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        #userInput {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            outline: none;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        #userInput:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+        }
+
+        #sendButton {
+            padding: 0 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #sendButton:hover {
+            background-color: #3367D6;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .quick-action {
+            background-color: var(--message-user);
+            border: none;
+            color: var(--text-color);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-action:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--darker-bg);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .formula-card {
+            background-color: var(--message-bot);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .formula-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .formula-content {
+            font-family: 'Courier New', monospace;
+            background-color: var(--input-bg);
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .success-message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease, fadeOut 0.5s ease 2.5s forwards;
+            z-index: 50;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                z-index: 10;
+                height: 100%;
+                transform: translateX(-100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-atom"></i></div>
+                <div class="logo-text">IAcNewton</div>
+            </div>
+            <button class="new-chat-btn" id="newChatBtn">
+                <i class="fas fa-plus"></i> Novo Chat
+            </button>
+            <div class="history-container" id="historyContainer">
+                <!-- Histórico de conversas será adicionado aqui -->
+            </div>
+            <div class="sidebar-footer">
+                Física Newtoniana © 2023
+            </div>
+        </div>
+
+        <!-- Chat -->
+        <div class="main-content">
+            <div class="chat-header">
+                <div class="chat-title">Conversa com IAcNewton</div>
+                <button class="tools-btn" id="toolsBtn">
+                    <i class="fas fa-tools"></i>
+                </button>
+            </div>
+            <div class="chat-container" id="chatbox">
+                <!-- Mensagens serão adicionadas aqui -->
+            </div>
+            <div class="input-container">
+                <div class="quick-actions" id="quickActions">
+                    <button class="quick-action" data-prompt="Explique a Primeira Lei de Newton">1ª Lei de Newton</button>
+                    <button class="quick-action" data-prompt="Qual a fórmula da força gravitacional?">Gravitação</button>
+                    <button class="quick-action" data-prompt="Diferencie massa e peso">Massa vs Peso</button>
+                    <button class="quick-action" data-prompt="Exemplo de cálculo de energia cinética">Energia Cinética</button>
+                </div>
+                <div class="input-box">
+                    <input type="text" id="userInput" placeholder="Pergunte sobre física newtoniana..." autofocus>
+                    <button id="sendButton" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Ferramentas -->
+    <div class="modal" id="toolsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Ferramentas de Física</div>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="formula-card">
+                <div class="formula-title">Segunda Lei de Newton</div>
+                <div class="formula-content">F = m × a</div>
+                <p>Força = massa × aceleração</p>
+            </div>
+            <div class="formula-card">
+                <div class="formula-title">Lei da Gravitação Universal</div>
+                <div class="formula-content">F = G × (m₁ × m₂)/r²</div>
+                <p>Onde G é a constante gravitacional (6.674 × 10⁻¹¹ N·m²/kg²)</p>
+            </div>
+            <div class="formula-card">
+                <div class="formula-title">Energia Cinética</div>
+                <div class="formula-content">Eₖ = ½ × m × v²</div>
+            </div>
+            <div class="formula-card">
+                <div class="formula-title">Primeira Lei de Newton (Lei da Inércia)</div>
+                <div class="formula-content">ΣF = 0 ⇒ v = constante</div>
+                <p>Um corpo permanece em repouso ou MRU a menos que uma força atue sobre ele</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API do OpenRouter (⚠️ Lembre-se que para produção segura, isso deveria estar em um back-end)
+        const API_KEY = "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";
+        const SYSTEM_PROMPT = `Você é IAcNewton, um assistente especializado em física newtoniana. Responda de forma clara e precisa sobre:
+        
+        - As três Leis de Newton (inércia, dinâmica, ação e reação)
+        - Cinemática (MRU, MRUV, movimento parabólico)
+        - Dinâmica (forças, atrito, plano inclinado)
+        - Energia mecânica (cinética, potencial, conservação)
+        - Gravitação universal e leis de Kepler
+        - Colisões e momento linear
+        - Hidrostática e princípios de Pascal/Arquimedes
+
+        Para perguntas fora deste escopo, responda educadamente:
+        "Meu foco é física newtoniana. Posso te ajudar com [tópico relacionado]?"
+
+        Sempre que relevante, inclua fórmulas formatadas como:
+        [F = m × a] e explique cada termo.`;
+
+        // Estado da aplicação
+        let chatHistory = [];
+        let currentChatId = Date.now();
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            loadChatHistory();
+            setupEventListeners();
+            showWelcomeMessage();
+        });
+
+        // Configura listeners
+        function setupEventListeners() {
+            document.getElementById('userInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') sendMessage();
+            });
+
+            document.getElementById('newChatBtn').addEventListener('click', newChat);
+
+            document.getElementById('toolsBtn').addEventListener('click', function() {
+                document.getElementById('toolsModal').style.display = 'flex';
+            });
+
+            document.getElementById('closeModal').addEventListener('click', function() {
+                document.getElementById('toolsModal').style.display = 'none';
+            });
+
+            document.querySelectorAll('.quick-action').forEach(button => {
+                button.addEventListener('click', function() {
+                    const prompt = this.getAttribute('data-prompt');
+                    document.getElementById('userInput').value = prompt;
+                    document.getElementById('userInput').focus();
+                    sendMessage(); // Envia automaticamente
+                });
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === document.getElementById('toolsModal')) {
+                    document.getElementById('toolsModal').style.display = 'none';
+                }
+            });
+        }
+
+        // Mostra mensagem de boas-vindas
+        function showWelcomeMessage() {
+            const chatbox = document.getElementById('chatbox');
+            chatbox.innerHTML = `
+                <div class="message bot-message">
+                    <div class="message-header">
+                        <i class="fas fa-atom"></i> IAcNewton
+                    </div>
+                    <div>Olá! Sou o IAcNewton, especialista em física newtoniana. Posso te ajudar com:</div>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Explicações das Leis de Newton</li>
+                        <li>Cálculos de força, movimento e energia</li>
+                        <li>Problemas de cinemática e dinâmica</li>
+                        <li>Conceitos de gravitação universal</li>
+                    </ul>
+                    <div style="margin-top: 15px; font-style: italic;">"Se vi mais longe, foi por estar sobre ombros de gigantes." - Newton</div>
+                </div>
+            `;
+        }
+
+        // Função principal para enviar mensagem
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessageToChat('user', message);
+            input.value = '';
+            
+            showTypingIndicator();
+            
+            // Simula um atraso mínimo mesmo com a API
+            setTimeout(() => {
+                fetchAIResponse(message);
+            }, 500);
+        }
+
+        // Adiciona mensagem ao chat
+        function addMessageToChat(sender, content) {
+            const chatbox = document.getElementById('chatbox');
+            const messageClass = sender === 'user' ? 'user-message' : 'bot-message';
+            const senderName = sender === 'user' ? 'Você' : 'IAcNewton';
+            const icon = sender === 'user' ? 'fas fa-user' : 'fas fa-atom';
+            
+            chatbox.innerHTML += `
+                <div class="message ${messageClass}">
+                    <div class="message-header">
+                        <i class="${icon}"></i> ${senderName}
+                    </div>
+                    <div>${content}</div>
+                </div>
+            `;
+            
+            if (sender === 'user') {
+                chatHistory.push({ sender, content });
+            }
+            
+            scrollToBottom();
+        }
+
+        // Mostra indicador de digitação
+        function showTypingIndicator() {
+            const chatbox = document.getElementById('chatbox');
+            chatbox.innerHTML += `
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            scrollToBottom();
+        }
+
+        // Remove indicador de digitação
+        function removeTypingIndicator() {
+            const chatbox = document.getElementById('chatbox');
+            const indicators = chatbox.getElementsByClassName('typing-indicator');
+            while (indicators[0]) {
+                indicators[0].remove();
+            }
+        }
+
+        // Chama a API do OpenRouter
+        function fetchAIResponse(message) {
+            fetch("https://openrouter.ai/api/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": Bearer ${API_KEY},
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    model: "deepseek/deepseek-r1:free",
+                    messages: [
+                        { role: "system", content: SYSTEM_PROMPT },
+                        ...chatHistory.map(msg => ({
+                            role: msg.sender === 'user' ? 'user' : 'assistant',
+                            content: msg.content
+                        })),
+                        { role: "user", content: message }
+                    ],
+                    temperature: 0.7
+                })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Erro na API');
+                return response.json();
+            })
+            .then(data => {
+                removeTypingIndicator();
+                const reply = data.choices[0]?.message?.content || "Não consegui gerar uma resposta. Reformule sua pergunta.";
+                addMessageToChat('bot', reply);
+                saveToHistory(currentChatId, message, reply);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                removeTypingIndicator();
+                addMessageToChat('bot', Resposta simulada (API offline): A Primeira Lei de Newton, ou Lei da Inércia, estabelece que um corpo permanece em repouso ou em movimento retilíneo uniforme a menos que uma força resultante atue sobre ele. [F = 0 ⇒ Δv = 0]);
+                saveToHistory(currentChatId, message, "Resposta simulada sobre a Primeira Lei de Newton");
+            });
+        }
+
+        // Rola para o final do chat
+        function scrollToBottom() {
+            const chatbox = document.getElementById('chatbox');
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        // Cria novo chat
+        function newChat() {
+            currentChatId = Date.now();
+            document.getElementById('chatbox').innerHTML = '';
+            chatHistory = [];
+            showWelcomeMessage();
+            showSuccessMessage('Nova conversa iniciada');
+        }
+
+        // Mostra mensagem de sucesso
+        function showSuccessMessage(message) {
+            const successMsg = document.createElement('div');
+            successMsg.className = 'success-message';
+            successMsg.innerHTML = <i class="fas fa-check-circle"></i> ${message};
+            document.body.appendChild(successMsg);
+            
+            setTimeout(() => {
+                successMsg.remove();
+            }, 3000);
+        }
+
+        // Salva no histórico
+        function saveToHistory(chatId, userMessage, botReply) {
+            const history = JSON.parse(localStorage.getItem('iaNewtonChatHistory') || '{}');
+            if (!history[chatId]) {
+                history[chatId] = {
+                    createdAt: new Date().toISOString(),
+                    messages: []
+                };
+            }
+            
+            history[chatId].messages.push({
+                user: userMessage,
+                bot: botReply,
+                timestamp: new Date().toISOString()
+            });
+            
+            localStorage.setItem('iaNewtonChatHistory', JSON.stringify(history));
+            loadChatHistory();
+        }
+
+        // Carrega histórico
+        function loadChatHistory() {
+            const history = JSON.parse(localStorage.getItem('iaNewtonChatHistory') || '{}');
+            const historyContainer = document.getElementById('historyContainer');
+            
+            historyContainer.innerHTML = '';
+            
+            Object.entries(history).sort((a, b) => 
+                new Date(b[1].createdAt) - new Date(a[1].createdAt)
+            .forEach(([id, chat]) => {
+                const lastMessage = chat.messages[chat.messages.length - 1]?.user || 'Nova conversa';
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.textContent = lastMessage.length > 30 ? 
+                    lastMessage.substring(0, 30) + '...' : lastMessage;
+                historyItem.addEventListener('click', () => loadChat(id, chat));
+                historyContainer.appendChild(historyItem);
+            });
+        }
+
+        // Carrega chat específico
+        function loadChat(chatId, chatData) {
+            currentChatId = chatId;
+            const chatbox = document.getElementById('chatbox');
+            chatbox.innerHTML = '';
+            chatHistory = [];
+            
+            chatData.messages.forEach(msg => {
+                addMessageToChat('user', msg.user);
+                addMessageToChat('bot', msg.bot);
+                chatHistory.push(
+                    { sender: 'user', content: msg.user },
+                    { sender: 'bot', content: msg.bot }
+                );
+            });
+            
+            showSuccessMessage('Conversa carregada');
+        }
+    </script>
+</body>
+</html>
