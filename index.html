@@ -431,6 +431,26 @@
             .main-content {
                 width: 100%;
             }
+            .game-btn {
+                background-color: var(--secondary-color);
+                color: white;
+                border: none;
+                padding: 12px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+
+.game-btn:hover {
+    background-color: #2E8B46;
+    transform: translateY(-2px);
+}
         }
     </style>
 </head>
@@ -444,6 +464,9 @@
             </div>
             <button class="new-chat-btn" id="newChatBtn">
                 <i class="fas fa-plus"></i> Novo Chat
+            </button>
+            <button class="game-btn" id="gameBtn">
+                <i class="fas fa-gamepad"></i> Jogo de Física
             </button>
             <div class="history-container" id="historyContainer">
                 <!-- Histórico de conversas será adicionado aqui -->
@@ -782,6 +805,9 @@
             
             showSuccessMessage('Conversa carregada');
         }
+        document.getElementById('gameBtn').addEventListener('click', function() {
+            window.location.href = 'game.html';
+        });
     </script>
 </body>
 </html>
