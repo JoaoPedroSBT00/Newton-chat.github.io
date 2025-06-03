@@ -185,7 +185,6 @@
             background: linear-gradient(rgba(30, 30, 30, 0.9), rgba(30, 30, 30, 0.9)), 
                         url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1471&auto=format&fit=crop');
             background-size: cover;
-            background-position: center;
         }
 
         .message {
@@ -497,16 +496,15 @@
             <div class="formula-card">
                 <div class="formula-title">Lei da Gravitação Universal</div>
                 <div class="formula-content">F = G × (m₁ × m₂)/r²</div>
-                <p>Onde G é a constante gravitacional (6.674 × 10⁻¹¹ N·m²/kg²)</p>
+                <p>Onde G é a constante gravitacional</p>
             </div>
             <div class="formula-card">
                 <div class="formula-title">Energia Cinética</div>
                 <div class="formula-content">Eₖ = ½ × m × v²</div>
             </div>
             <div class="formula-card">
-                <div class="formula-title">Primeira Lei de Newton (Lei da Inércia)</div>
-                <div class="formula-content">ΣF = 0 ⇒ v = constante</div>
-                <p>Um corpo permanece em repouso ou MRU a menos que uma força atue sobre ele</p>
+                <div class="formula-title">Trabalho Mecânico</div>
+                <div class="formula-content">W = F × d × cosθ</div>
             </div>
         </div>
     </div>
@@ -514,21 +512,24 @@
     <script>
         // API do OpenRouter (⚠️ Lembre-se que para produção segura, isso deveria estar em um back-end)
         const API_KEY = "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";
-        const SYSTEM_PROMPT = `Você é IAcNewton, um assistente especializado em física newtoniana. Responda de forma clara e precisa sobre:
-        
-        - As três Leis de Newton (inércia, dinâmica, ação e reação)
-        - Cinemática (MRU, MRUV, movimento parabólico)
+        const SYSTEM_PROMPT = `
+        Você é IAcNewton, um assistente especializado em física newtoniana com um toque de humor.
+        Responda perguntas sobre:
+        - As três Leis de Newton
+        - Cinemática (MRU, MRUV, movimento de projéteis)
         - Dinâmica (forças, atrito, plano inclinado)
-        - Energia mecânica (cinética, potencial, conservação)
+        - Energia (cinética, potencial, conservação)
+        - Colisões (elásticas e inelásticas)
         - Gravitação universal e leis de Kepler
-        - Colisões e momento linear
-        - Hidrostática e princípios de Pascal/Arquimedes
+        - Movimento circular e centrípeto
+        - Hidrostática e princípio de Pascal
 
-        Para perguntas fora deste escopo, responda educadamente:
-        "Meu foco é física newtoniana. Posso te ajudar com [tópico relacionado]?"
+        Para outras áreas da física ou disciplinas, responda educadamente:
+        "Meu conhecimento é focado em física newtoniana. Posso te ajudar com [tópico relacionado]?"
 
-        Sempre que relevante, inclua fórmulas formatadas como:
-        [F = m × a] e explique cada termo.`;
+        Use exemplos práticos quando possível e inclua fórmulas relevantes formatadas como:
+        Fórmula: [F = m × a]
+        `;
 
         // Estado da aplicação
         let chatHistory = [];
@@ -543,29 +544,34 @@
 
         // Configura listeners
         function setupEventListeners() {
+            // Enviar mensagem com Enter
             document.getElementById('userInput').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') sendMessage();
             });
 
+            // Novo chat
             document.getElementById('newChatBtn').addEventListener('click', newChat);
 
+            // Botão de ferramentas
             document.getElementById('toolsBtn').addEventListener('click', function() {
                 document.getElementById('toolsModal').style.display = 'flex';
             });
 
+            // Fechar modal
             document.getElementById('closeModal').addEventListener('click', function() {
                 document.getElementById('toolsModal').style.display = 'none';
             });
 
+            // Ações rápidas
             document.querySelectorAll('.quick-action').forEach(button => {
                 button.addEventListener('click', function() {
                     const prompt = this.getAttribute('data-prompt');
                     document.getElementById('userInput').value = prompt;
                     document.getElementById('userInput').focus();
-                    sendMessage(); // Envia automaticamente
                 });
             });
 
+            // Fechar modal clicando fora
             window.addEventListener('click', function(event) {
                 if (event.target === document.getElementById('toolsModal')) {
                     document.getElementById('toolsModal').style.display = 'none';
@@ -581,14 +587,14 @@
                     <div class="message-header">
                         <i class="fas fa-atom"></i> IAcNewton
                     </div>
-                    <div>Olá! Sou o IAcNewton, especialista em física newtoniana. Posso te ajudar com:</div>
+                    <div>Olá! Sou o IAcNewton, seu assistente de física newtoniana. Posso te ajudar com:</div>
                     <ul style="margin-top: 10px; margin-left: 20px;">
-                        <li>Explicações das Leis de Newton</li>
-                        <li>Cálculos de força, movimento e energia</li>
-                        <li>Problemas de cinemática e dinâmica</li>
-                        <li>Conceitos de gravitação universal</li>
+                        <li>Leis do movimento</li>
+                        <li>Cálculos de força e energia</li>
+                        <li>Explicações sobre gravitação</li>
+                        <li>Resolução de problemas</li>
                     </ul>
-                    <div style="margin-top: 15px; font-style: italic;">"Se vi mais longe, foi por estar sobre ombros de gigantes." - Newton</div>
+                    <div style="margin-top: 10px;">Experimente usar os botões de ação rápida ou me pergunte algo!</div>
                 </div>
             `;
         }
@@ -599,15 +605,15 @@
             const message = input.value.trim();
             if (!message) return;
 
+            // Adiciona mensagem do usuário
             addMessageToChat('user', message);
             input.value = '';
             
+            // Mostra indicador de digitação
             showTypingIndicator();
             
-            // Simula um atraso mínimo mesmo com a API
-            setTimeout(() => {
-                fetchAIResponse(message);
-            }, 500);
+            // Chama a API
+            fetchAIResponse(message);
         }
 
         // Adiciona mensagem ao chat
@@ -626,6 +632,7 @@
                 </div>
             `;
             
+            // Atualiza histórico
             if (sender === 'user') {
                 chatHistory.push({ sender, content });
             }
@@ -660,7 +667,7 @@
             fetch("https://openrouter.ai/api/v1/chat/completions", {
                 method: "POST",
                 headers: {
-                    "Authorization": Bearer ${API_KEY},
+                    "Authorization": `Bearer ${API_KEY}`,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
@@ -676,21 +683,17 @@
                     temperature: 0.7
                 })
             })
-            .then(response => {
-                if (!response.ok) throw new Error('Erro na API');
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 removeTypingIndicator();
-                const reply = data.choices[0]?.message?.content || "Não consegui gerar uma resposta. Reformule sua pergunta.";
+                const reply = data.choices[0].message.content;
                 addMessageToChat('bot', reply);
                 saveToHistory(currentChatId, message, reply);
             })
             .catch(error => {
-                console.error('Error:', error);
                 removeTypingIndicator();
-                addMessageToChat('bot', Resposta simulada (API offline): A Primeira Lei de Newton, ou Lei da Inércia, estabelece que um corpo permanece em repouso ou em movimento retilíneo uniforme a menos que uma força resultante atue sobre ele. [F = 0 ⇒ Δv = 0]);
-                saveToHistory(currentChatId, message, "Resposta simulada sobre a Primeira Lei de Newton");
+                addMessageToChat('bot', 'Ocorreu um erro ao processar sua pergunta. Por favor, tente novamente.');
+                console.error('Error:', error);
             });
         }
 
@@ -713,7 +716,7 @@
         function showSuccessMessage(message) {
             const successMsg = document.createElement('div');
             successMsg.className = 'success-message';
-            successMsg.innerHTML = <i class="fas fa-check-circle"></i> ${message};
+            successMsg.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
             document.body.appendChild(successMsg);
             
             setTimeout(() => {
@@ -750,7 +753,7 @@
             
             Object.entries(history).sort((a, b) => 
                 new Date(b[1].createdAt) - new Date(a[1].createdAt)
-            .forEach(([id, chat]) => {
+            ).forEach(([id, chat]) => {
                 const lastMessage = chat.messages[chat.messages.length - 1]?.user || 'Nova conversa';
                 const historyItem = document.createElement('div');
                 historyItem.className = 'history-item';
