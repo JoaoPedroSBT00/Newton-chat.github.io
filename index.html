@@ -447,11 +447,12 @@
                 gap: 8px;
             }
 
-.game-btn:hover {
-    background-color: #2E8B46;
-    transform: translateY(-2px);
-}
-        }
+            .game-btn:hover {
+                background-color: #2E8B46;
+                transform: translateY(-2px);
+            }
+                    }
+
     </style>
 </head>
 <body>
@@ -465,14 +466,11 @@
             <button class="new-chat-btn" id="newChatBtn">
                 <i class="fas fa-plus"></i> Novo Chat
             </button>
-            <button class="game-btn" id="gameBtn">
-                <i class="fas fa-gamepad"></i> Jogo de Física
-            </button>
             <div class="history-container" id="historyContainer">
                 <!-- Histórico de conversas será adicionado aqui -->
             </div>
             <div class="sidebar-footer">
-                Física Newtoniana © 2023
+                Física Newtoniana © 2025
             </div>
         </div>
 
@@ -805,9 +803,6 @@
             
             showSuccessMessage('Conversa carregada');
         }
-        document.getElementById('gameBtn').addEventListener('click', function() {
-            window.location.href = 'game.html';
-        });
     </script>
 </body>
 </html>
