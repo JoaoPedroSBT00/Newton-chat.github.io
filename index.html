@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -182,8 +183,8 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            background: linear-gradient(rgba(30, 30, 30, 0.9), rgba(30, 30, 30, 0.9)), 
-                        url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1471&auto=format&fit=crop');
+            background: linear-gradient(rgba(30, 30, 30, 0.9), rgba(30, 30, 30, 0.9)),
+                url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1471&auto=format&fit=crop');
             background-size: cover;
         }
 
@@ -198,8 +199,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .user-message {
@@ -241,13 +249,29 @@
             animation: typingAnimation 1.4s infinite ease-in-out;
         }
 
-        .typing-dot:nth-child(1) { animation-delay: 0s; }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
 
         @keyframes typingAnimation {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-5px); }
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-5px);
+            }
         }
 
         /* Input */
@@ -347,8 +371,15 @@
         }
 
         @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal-header {
@@ -408,13 +439,25 @@
         }
 
         @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
         }
 
         /* Responsividade */
@@ -425,12 +468,15 @@
                 height: 100%;
                 transform: translateX(-100%);
             }
+
             .sidebar.active {
                 transform: translateX(0);
             }
+
             .main-content {
                 width: 100%;
             }
+
             .game-btn {
                 background-color: var(--secondary-color);
                 color: white;
@@ -451,10 +497,10 @@
                 background-color: #2E8B46;
                 transform: translateY(-2px);
             }
-                    }
-
+        }
     </style>
 </head>
+
 <body>
     <div class="app-container">
         <!-- Sidebar -->
@@ -487,10 +533,13 @@
             </div>
             <div class="input-container">
                 <div class="quick-actions" id="quickActions">
-                    <button class="quick-action" data-prompt="Explique a Primeira Lei de Newton">1ª Lei de Newton</button>
-                    <button class="quick-action" data-prompt="Qual a fórmula da força gravitacional?">Gravitação</button>
+                    <button class="quick-action" data-prompt="Explique a Primeira Lei de Newton">1ª Lei de
+                        Newton</button>
+                    <button class="quick-action"
+                        data-prompt="Qual a fórmula da força gravitacional?">Gravitação</button>
                     <button class="quick-action" data-prompt="Diferencie massa e peso">Massa vs Peso</button>
-                    <button class="quick-action" data-prompt="Exemplo de cálculo de energia cinética">Energia Cinética</button>
+                    <button class="quick-action" data-prompt="Exemplo de cálculo de energia cinética">Energia
+                        Cinética</button>
                 </div>
                 <div class="input-box">
                     <input type="text" id="userInput" placeholder="Pergunte sobre física newtoniana..." autofocus>
@@ -532,32 +581,43 @@
 
     <script>
         // API do OpenRouter (⚠️ Lembre-se que para produção segura, isso deveria estar em um back-end)
-        const API_KEY = "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";
+        const API_KEY = "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";
         const SYSTEM_PROMPT = `
-        Você é IAcNewton, um assistente especializado em física newtoniana com um toque de humor.
-        Responda perguntas sobre:
-        - As três Leis de Newton
-        - Cinemática (MRU, MRUV, movimento de projéteis)
-        - Dinâmica (forças, atrito, plano inclinado)
-        - Energia (cinética, potencial, conservação)
-        - Colisões (elásticas e inelásticas)
-        - Gravitação universal e leis de Kepler
-        - Movimento circular e centrípeto
-        - Hidrostática e princípio de Pascal
+        Você é IAcNewton, um assistente especializado em física newtoniana. 
+        Você pode responder perguntas sobre as Leis de Newton, Cinemática, Dinâmica, Energia, Colisões, Gravitação, entre outros tópicos.
 
-        Para outras áreas da física ou disciplinas, responda educadamente:
-        "Meu conhecimento é focado em física newtoniana. Posso te ajudar com [tópico relacionado]?"
+        Quando for criar um quiz, faça as perguntas com um formato bem estruturado, uma de cada vez, e apenas revele a resposta correta quando o usuário pedir explicitamente.
 
-        Use exemplos práticos quando possível e inclua fórmulas relevantes formatadas como:
-        Fórmula: [F = m × a]
-        `;
+        ⚙️ Exemplo de Quiz:  
+        Pergunta 1:  
+        O que é a 1ª Lei de Newton?  
+        A) Um objeto em repouso tende a continuar em repouso  
+        B) A força é igual à massa vezes a aceleração  
+        C) A ação e a reação são iguais e opostas  
+        D) O movimento é constante
+
+        Pergunta 2:  
+        Qual a fórmula da gravitação universal?  
+        A) F = m × a  
+        B) F = G × (m₁ × m₂)/r²  
+        C) F = P × v  
+        D) F = m × g
+
+        ⚠️ Só forneça as respostas e explicações quando o usuário pedir por elas.  
+        Exemplo de solicitação: "Me diga as respostas agora" ou "Qual a resposta da pergunta 1?".
+
+        ⚙️ Caso a pessoa pergunte sobre algo fora da física newtoniana, responda educadamente:  
+        "Meu conhecimento é focado em física newtoniana. Posso te ajudar com esse tema?"
+
+        Lembre-se de sempre usar uma abordagem clara e simples!
+`;
 
         // Estado da aplicação
         let chatHistory = [];
         let currentChatId = Date.now();
 
         // Inicialização
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             loadChatHistory();
             setupEventListeners();
             showWelcomeMessage();
@@ -566,7 +626,7 @@
         // Configura listeners
         function setupEventListeners() {
             // Enviar mensagem com Enter
-            document.getElementById('userInput').addEventListener('keypress', function(e) {
+            document.getElementById('userInput').addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') sendMessage();
             });
 
@@ -574,18 +634,18 @@
             document.getElementById('newChatBtn').addEventListener('click', newChat);
 
             // Botão de ferramentas
-            document.getElementById('toolsBtn').addEventListener('click', function() {
+            document.getElementById('toolsBtn').addEventListener('click', function () {
                 document.getElementById('toolsModal').style.display = 'flex';
             });
 
             // Fechar modal
-            document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('closeModal').addEventListener('click', function () {
                 document.getElementById('toolsModal').style.display = 'none';
             });
 
             // Ações rápidas
             document.querySelectorAll('.quick-action').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const prompt = this.getAttribute('data-prompt');
                     document.getElementById('userInput').value = prompt;
                     document.getElementById('userInput').focus();
@@ -593,7 +653,7 @@
             });
 
             // Fechar modal clicando fora
-            window.addEventListener('click', function(event) {
+            window.addEventListener('click', function (event) {
                 if (event.target === document.getElementById('toolsModal')) {
                     document.getElementById('toolsModal').style.display = 'none';
                 }
@@ -629,10 +689,10 @@
             // Adiciona mensagem do usuário
             addMessageToChat('user', message);
             input.value = '';
-            
+
             // Mostra indicador de digitação
             showTypingIndicator();
-            
+
             // Chama a API
             fetchAIResponse(message);
         }
@@ -643,7 +703,7 @@
             const messageClass = sender === 'user' ? 'user-message' : 'bot-message';
             const senderName = sender === 'user' ? 'Você' : 'IAcNewton';
             const icon = sender === 'user' ? 'fas fa-user' : 'fas fa-atom';
-            
+
             chatbox.innerHTML += `
                 <div class="message ${messageClass}">
                     <div class="message-header">
@@ -652,12 +712,12 @@
                     <div>${content}</div>
                 </div>
             `;
-            
+
             // Atualiza histórico
             if (sender === 'user') {
                 chatHistory.push({ sender, content });
             }
-            
+
             scrollToBottom();
         }
 
@@ -685,37 +745,98 @@
 
         // Chama a API do OpenRouter
         function fetchAIResponse(message) {
-            fetch("https://openrouter.ai/api/v1/chat/completions", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${API_KEY}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    model: "deepseek/deepseek-r1:free",
-                    messages: [
-                        { role: "system", content: SYSTEM_PROMPT },
-                        ...chatHistory.map(msg => ({
-                            role: msg.sender === 'user' ? 'user' : 'assistant',
-                            content: msg.content
-                        })),
-                        { role: "user", content: message }
-                    ],
-                    temperature: 0.7
+            // Verifica se o usuário está pedindo um quiz
+            if (message.toLowerCase().includes("quiz sobre")) {
+                currentQuestionIndex = 0; // Reseta o índice de pergunta
+                showNextQuestion(); // Exibe a primeira pergunta gerada pela IA
+            }
+            // Se o usuário pede as respostas
+            else if (message.toLowerCase().includes("qual a resposta") || message.toLowerCase().includes("me diga as respostas agora")) {
+                showAnswers(); // Exibe as respostas do quiz
+            }
+            // Caso a mensagem seja uma pergunta normal, a IA responde
+            else {
+                // Se a pergunta não for relacionada a um quiz, a IA responde normalmente
+                fetch("https://openrouter.ai/api/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${API_KEY}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek/deepseek-r1:free",
+                        messages: [
+                            { role: "system", content: SYSTEM_PROMPT },
+                            ...chatHistory.map(msg => ({
+                                role: msg.sender === 'user' ? 'user' : 'assistant',
+                                content: msg.content
+                            })),
+                            { role: "user", content: message }
+                        ],
+                        temperature: 0.7
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                removeTypingIndicator();
-                const reply = data.choices[0].message.content;
-                addMessageToChat('bot', reply);
-                saveToHistory(currentChatId, message, reply);
-            })
-            .catch(error => {
-                removeTypingIndicator();
-                addMessageToChat('bot', 'Ocorreu um erro ao processar sua pergunta. Por favor, tente novamente.');
-                console.error('Error:', error);
+                    .then(response => response.json())
+                    .then(data => {
+                        removeTypingIndicator();
+                        const reply = data.choices[0].message.content;
+                        addMessageToChat('bot', reply);
+                        saveToHistory(currentChatId, message, reply);
+                    })
+                    .catch(error => {
+                        removeTypingIndicator();
+                        addMessageToChat('bot', 'Ocorreu um erro ao processar sua pergunta. Por favor, tente novamente.');
+                        console.error('Error:', error);
+                    });
+            }
+        }
+
+        // Função para exibir a próxima pergunta com formatação
+        function showNextQuestion() {
+            if (currentQuestionIndex < quizQuestions.length) {
+                const question = quizQuestions[currentQuestionIndex];
+
+                // Formatação da pergunta
+                let questionText = `<strong><u>Pergunta ${currentQuestionIndex + 1}:</u></strong><br><br>`;
+                questionText += `<strong>${question.question}</strong><br><br>`;
+
+                // Exibe alternativas numeradas com espaçamento adequado
+                questionText += question.options.map((option, index) => {
+                    return `<strong>${String.fromCharCode(65 + index)})</strong> ${option}<br><br>`;
+                }).join('');
+
+                // Adiciona a pergunta ao chat
+                addMessageToChat('bot', questionText);
+                currentQuestionIndex++;
+            } else {
+                addMessageToChat('bot', 'Quiz completo! Se você quiser as respostas, é só pedir!');
+            }
+        }
+
+        // Função para exibir as respostas com explicações detalhadas
+        function showAnswers() {
+            let answersText = '<strong>Aqui estão as respostas e explicações do quiz:</strong><br><br>';
+
+            quizQuestions.forEach((question, index) => {
+                answersText += `<strong>Pergunta ${index + 1}:</strong><br>`;
+                answersText += `<strong>Resposta:</strong> ${question.correctAnswer}<br>`;
+                answersText += `<strong>Explicação:</strong> ${question.explanation}<br><br>`;
             });
+
+            // Exibe as respostas no chat
+            addMessageToChat('bot', answersText);
+        }
+
+        // Função para exibir a explicação sobre as Leis de Newton (apenas exemplo)
+        function showNewtonLaws() {
+            const newtonLaws = `
+        <strong>As Três Leis de Newton:</strong><br><br>
+        <strong>1. Primeira Lei (Inércia):</strong> <i>"Um corpo permanece em repouso ou em movimento retilíneo uniforme, a menos que uma força externa atue sobre ele."</i><br><br>
+        <strong>2. Segunda Lei (F = m · a):</strong> <i>"A força resultante sobre um corpo é igual à massa do corpo multiplicada por sua aceleração."</i><br><br>
+        <strong>3. Terceira Lei (Ação e Reação):</strong> <i>"Para toda ação, há uma reação igual e oposta."</i><br><br>
+        Se você quiser fazer um quiz sobre Newton, é só pedir! 😊
+    `;
+            addMessageToChat('bot', newtonLaws);
         }
 
         // Rola para o final do chat
@@ -739,7 +860,7 @@
             successMsg.className = 'success-message';
             successMsg.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
             document.body.appendChild(successMsg);
-            
+
             setTimeout(() => {
                 successMsg.remove();
             }, 3000);
@@ -754,31 +875,69 @@
                     messages: []
                 };
             }
-            
+
             history[chatId].messages.push({
                 user: userMessage,
                 bot: botReply,
                 timestamp: new Date().toISOString()
             });
-            
+
             localStorage.setItem('iaNewtonChatHistory', JSON.stringify(history));
             loadChatHistory();
         }
+
+
+        // Função para exibir a próxima pergunta com a formatação corrigida
+        function showNextQuestion() {
+            if (currentQuestionIndex < currentQuiz.length) {
+                const question = currentQuiz[currentQuestionIndex];
+
+                // Formata a pergunta com um título e as alternativas numeradas
+                let questionText = `<strong><u>Pergunta ${currentQuestionIndex + 1}:</u></strong><br><br>`;
+                questionText += `<strong>${question.question}</strong><br><br>`;
+
+                // Exibe as alternativas numeradas com espaçamento adequado
+                questionText += question.options.map((option, index) => {
+                    return `<strong>${String.fromCharCode(65 + index)})</strong> ${option}<br><br>`;
+                }).join('');
+
+                // Adiciona a pergunta formatada no chat
+                addMessageToChat('bot', questionText);
+                currentQuestionIndex++;
+            } else {
+                addMessageToChat('bot', 'Quiz completo! Se você quiser as respostas, é só pedir!');
+            }
+        }
+
+        // Função para exibir as respostas com explicações detalhadas
+        function showAnswers() {
+            let answersText = '<strong>Aqui estão as respostas e explicações do quiz:</strong><br><br>';
+
+            currentQuiz.forEach((question, index) => {
+                answersText += `<strong>Pergunta ${index + 1}:</strong><br>`;
+                answersText += `<strong>Resposta:</strong> ${question.correctAnswer}<br>`;
+                answersText += `<strong>Explicação:</strong> ${question.explanation}<br><br>`;
+            });
+
+            // Exibe as respostas organizadas
+            addMessageToChat('bot', answersText);
+        }
+
 
         // Carrega histórico
         function loadChatHistory() {
             const history = JSON.parse(localStorage.getItem('iaNewtonChatHistory') || '{}');
             const historyContainer = document.getElementById('historyContainer');
-            
+
             historyContainer.innerHTML = '';
-            
-            Object.entries(history).sort((a, b) => 
+
+            Object.entries(history).sort((a, b) =>
                 new Date(b[1].createdAt) - new Date(a[1].createdAt)
             ).forEach(([id, chat]) => {
                 const lastMessage = chat.messages[chat.messages.length - 1]?.user || 'Nova conversa';
                 const historyItem = document.createElement('div');
                 historyItem.className = 'history-item';
-                historyItem.textContent = lastMessage.length > 30 ? 
+                historyItem.textContent = lastMessage.length > 30 ?
                     lastMessage.substring(0, 30) + '...' : lastMessage;
                 historyItem.addEventListener('click', () => loadChat(id, chat));
                 historyContainer.appendChild(historyItem);
@@ -791,7 +950,7 @@
             const chatbox = document.getElementById('chatbox');
             chatbox.innerHTML = '';
             chatHistory = [];
-            
+
             chatData.messages.forEach(msg => {
                 addMessageToChat('user', msg.user);
                 addMessageToChat('bot', msg.bot);
@@ -800,9 +959,12 @@
                     { sender: 'bot', content: msg.bot }
                 );
             });
-            
+
             showSuccessMessage('Conversa carregada');
         }
+
+
     </script>
 </body>
+
 </html>
